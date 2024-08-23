@@ -21,28 +21,22 @@ const update = async (req, res) => {
         const { title, desc } = req.body;
         const blogId = req.params.id;
 
-        // Find the blog to update
         const blogToUpdate = await Blgomodel.findById(blogId);
         if (!blogToUpdate) {
             return res.status(404).json({ success: false, message: 'Blog not found' });
         }
 
-        // Update fields if they are provided
-        blogToUpdate.title = title || blogToUpdate.title;
-        blogToUpdate.desc = desc || blogToUpdate.desc;
-
-        // Only update the image if a new one is uploaded
-        if (req.file) {
-            blogToUpdate.image = req.file.filename;
-        }
+        if (title) blogToUpdate.title = title;
+        if (desc) blogToUpdate.desc = desc;
+        if (req.file) blogToUpdate.image = req.file.filename;
 
         await blogToUpdate.save();
         res.status(200).json({ success: true, message: 'Blog updated successfully', blog: blogToUpdate });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
-};
+}
 
 
 export { Create, update };

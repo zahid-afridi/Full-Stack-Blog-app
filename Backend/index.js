@@ -5,6 +5,7 @@ import DBCon from './libs/db.js'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import BlogRoutes from './routes/Blogs.js'
+import DashboardRoutes from './routes/Dashboard.js'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ app.use(cookieParser())
 app.use(cors('*'))
 app.use('/auth',AuthRoutes)
 app.use('/blog',BlogRoutes)
+app.use('/dashboard',DashboardRoutes)
 
 app.listen(PORT,()=>{
     console.log(`App is running on Port ${PORT}`)
