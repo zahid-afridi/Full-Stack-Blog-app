@@ -1,17 +1,93 @@
+import fs from 'fs';
+import jwt from 'jsonwebtoken'
 
-const Register=async(req,res)=>{
+import { FileUploadeToColoudinary } from '../libs/Cloudinary.js';
+import UserModal from '../models/User.js';
+import bcrypt from 'bcryptjs'
+
+const Register = async (req, res) => {
     try {
-        
+        const {FullName,email,password}=req.body
+        // Upload the image to Cloudinary
+        const imagePath = req.file.filename;
+        // const cloudinaryResult = await FileUploadeToColoudinary(imagePath, 'user_profiles');
+          console.log(imagePath)
+        // Create a new user with the uploaded image URL
+        const existUser= await UserModal.findOne({email})
+        if (existUser) {
+            return res.status(301).json({success:false,message:"User Already Exist Please Login"})
+        }
+        const hasePassword= await bcrypt.hashSync(password,10)
+        const newUser = new UserModal({
+            FullName: FullName,
+            email: email,
+            password: hasePassword,
+            profile: imagePath,
+        });
+
+        // Save the user to the database
+        await newUser.save();
+
+        // // Remove the image from the local directory after uploading to Cloudinary
+        // fs.unlinkSync(imagePath);
+
+        res.status(201).json({ message: 'User registered successfully',user:newUser});
     } catch (error) {
-        
+        console.error('Error during registration', error);
+        res.status(500).json({ error: 'Error during registration' });
     }
 }
+
+
+
 const Login=async(req,res)=>{
     try {
-        
+        const {email,password}=req.body
+         console.log(email,password)
+        if (!email || !password) {
+            return res.status(404).json({success:false,message:"All fildes are required"})
+        }
+        const FindUser= await UserModal.findOne({email})
+        if (!FindUser) {
+            return res.status(404).json({success:false,message:"Account Not Found Please Login"})
+            
+        }
+        const comparePassword=await bcrypt.compare(password,FindUser.password)
+
+        if (!comparePassword) {
+            return res.status(404).json({success:false,message:"invalid Password"})
+            
+        }
+          // Create JWT tokenjsonwebtoken
+          const token = jwt.sign({ userId: FindUser._id }, process.env.JWT_SECRET);
+
+          // Set the token in cookies
+          // res.cookie('token', token, { httpOnly: true,secure:false,  sameSite: 'none'  });
+          res.cookie('token', token, {    
+              httpOnly: true,
+              secure: false, // Set to true if using HTTPS, even on localhost
+               
+              maxAge: 3600000 // This sets the cookie to expire after 1 hour
+          });
+        return res.status(200).json({success:true,message:"Login successfully",user:FindUser,token})
+
     } catch (error) {
-        
+        console.error('Error during registration', error);
+        res.status(500).json({ error: 'intneral server error' });
+    }
+}
+const Logout=async(req,res)=>{
+    try {
+        // Clear the token cookie
+        res.clearCookie('token');
+
+        // Return success message
+        res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+        // Handle error
+        console.error("Error logging out:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
-export {Register,Login}
+export {Register,Login,Logout}

@@ -3,16 +3,23 @@ import dotenv from 'dotenv'
 import AuthRoutes from './routes/Auth.js'
 import DBCon from './libs/db.js'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import BlogRoutes from './routes/Blogs.js'
+
 dotenv.config()
 
 const PORT=process.env.PORT || 4000
 const app=express()
 DBCon()
+app.use(express.json())
 app.get('/',(req,res)=>{
     res.send('hello from server')
 })
+app.use(express.static('public'))
+app.use(cookieParser())
 app.use(cors('*'))
 app.use('/auth',AuthRoutes)
+app.use('/blog',BlogRoutes)
 
 app.listen(PORT,()=>{
     console.log(`App is running on Port ${PORT}`)

@@ -11,7 +11,14 @@ const UserSchema= new mongoose.Schema({
     },
     profile:{
         type:String,
+    },
+    role:{
+         type: String,
+        enum: ['admin', 'user'],
+        default: 'user'
     }
 },{timestamps:true})
 
 const UserModal=mongoose.model('User',UserSchema)
+
+export default UserModal
