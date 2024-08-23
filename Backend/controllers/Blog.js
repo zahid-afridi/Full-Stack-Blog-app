@@ -38,5 +38,36 @@ const update = async (req, res) => {
     }
 }
 
+const GetPosts=async(req,res)=>{
+    try {
+        const posts= await Blgomodel.find()
+       
+        if (!posts) {
+            return res.status(404).json({ success: false, message: 'Blog not found' });
+        }
+        res.status(200).json({ success: true,  posts });
 
-export { Create, update };
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
+const DeleteBlog=async(req,res)=>{
+    try {
+        const postid=req.params.id
+        const posts= await Blgomodel.findById(postid)
+       
+        if (!posts) {
+            return res.status(404).json({ success: false, message: 'Blog not found' });
+        }
+        const deletepost=await Blgomodel.findByIdAndDelete(postid)
+        res.status(200).json({ success: true, message:"Post Delete Successfully",  post:deletepost });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
+export { Create, update,GetPosts,DeleteBlog };
