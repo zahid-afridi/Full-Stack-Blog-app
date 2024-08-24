@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import LatestPost from '../Components/LatestPost';
+import { get } from '../services/Endpoint';
 
 export default function Home() {
+
   return (
     <>
       <div className="container-fluid bg-dark hero-section text-center">
@@ -13,7 +15,8 @@ export default function Home() {
 
 <div className='container-fluid  p-5'>
 
-    <LatestPost/>
+    <LatestPost />
+
 </div>
     </>
   );

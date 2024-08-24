@@ -40,42 +40,35 @@ const Register = async (req, res) => {
 
 
 
-const Login=async(req,res)=>{
+const Login = async (req, res) => {
     try {
-        const {email,password}=req.body
-         console.log(email,password)
+        const { email, password } = req.body;
+        console.log(email, password);
         if (!email || !password) {
-            return res.status(404).json({success:false,message:"All fildes are required"})
+            return res.status(400).json({ success: false, message: "All fields are required" });
         }
-        const FindUser= await UserModal.findOne({email})
+        const FindUser = await UserModal.findOne({ email });
         if (!FindUser) {
-            return res.status(404).json({success:false,message:"Account Not Found Please Login"})
-            
+            return res.status(404).json({ success: false, message: "Account not found. Please register." });
         }
-        const comparePassword=await bcrypt.compare(password,FindUser.password)
-
+        const comparePassword = await bcrypt.compare(password, FindUser.password);
         if (!comparePassword) {
-            return res.status(404).json({success:false,message:"invalid Password"})
-            
+            return res.status(401).json({ success: false, message: "Invalid password" });
         }
-          // Create JWT tokenjsonwebtoken
-          const token = jwt.sign({ userId: FindUser._id }, process.env.JWT_SECRET);
 
-          // Set the token in cookies
-          // res.cookie('token', token, { httpOnly: true,secure:false,  sameSite: 'none'  });
-          res.cookie('token', token, {    
-              httpOnly: true,
-              secure: false, // Set to true if using HTTPS, even on localhost
-               
-              maxAge: 3600000 // This sets the cookie to expire after 1 hour
-          });
-        return res.status(200).json({success:true,message:"Login successfully",user:FindUser,token})
-
+        const token = jwt.sign({ userId: FindUser._id }, process.env.JWT_SECRET);
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 3600000, // 1 hour
+        });
+        return res.status(200).json({ success: true, message: "Login successfully", user: FindUser, token });
     } catch (error) {
-        console.error('Error during registration', error);
-        res.status(500).json({ error: 'intneral server error' });
+        console.error('Error during login', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
-}
+};
+
 const Logout=async(req,res)=>{
     try {
         // Clear the token cookie

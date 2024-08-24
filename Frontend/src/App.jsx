@@ -9,6 +9,8 @@ import Adminlayout from './Layout/Adminlayout'
 import AddPost from './Pages/Admin/AddPost'
 import User from './Pages/Admin/User'
 import AllPost from './Pages/AllPost'
+import Login from './Pages/Login'
+import Register from './Pages/Register'
 
 export default function App() {
   return (
@@ -18,7 +20,7 @@ export default function App() {
    <Routes>
     <Route path='/' element={<UserLayout/>}>
     <Route index element={<Home/>}/>
-    <Route path='blog' element={<Blog/>}></Route>
+    <Route path='blog/:postId' element={<Blog/>}></Route>
     </Route>
         <Route path='/dashboard' element={<Adminlayout/>}>
         <Route index element={<Admin/>}/>
@@ -26,6 +28,8 @@ export default function App() {
         <Route path='users' element={<User/>}/>
         <Route path='allposts' element={<AllPost/>}/>
         </Route>
+   <Route path='/login' element={<Login/>}></Route>
+   <Route path='/register' element={<Register/>}></Route>
    </Routes>
    </BrowserRouter>
   </>

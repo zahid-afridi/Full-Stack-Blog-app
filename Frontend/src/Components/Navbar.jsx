@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
-    const [admin,setAdmin]=useState(false)
+    const [islogin,setIslogin]=useState(false)
   return (
     <nav className="navbar d-flex justify-content-between   align-items-center p-3">
-      <Link to={'/'}><h1 className="mx-5 text-white fs-2 fw-bold">Zahid Blog</h1></Link>
+      <Link to={'/'}><h1 className="mx-5 text-white fs-2 fw-bold">CodeByZahid</h1></Link>
       <div className="d-flex align-items-center">
-        {admin ? <button className="btn_sign mx-3">Sign in</button> : (
+        {!islogin ? <Link to={'/login'}><button className="btn_sign mx-3">Sign in</button></Link> : (
             <div className="dropdown">
             <div className="avatar-container pointer rounded-circle overflow-hidden bg-info" data-bs-toggle="dropdown" aria-expanded="false" style={{ width: '40px', height: '40px', cursor: "pointer" }}>
               <img 
