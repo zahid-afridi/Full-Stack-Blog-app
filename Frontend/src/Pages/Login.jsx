@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { post } from '../services/Endpoint';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/AuthSlice';
 
 export default function Login() {
     const navigate=useNavigate()
+    const dispatch=useDispatch()
     const [value, setValue] = useState({
         email: "",
         password: ""
@@ -23,7 +26,9 @@ export default function Login() {
             const response = request.data;
             console.log("login success", response);
            if (request.status==200) {
+            dispatch(setUser(response.user));
             navigate('/')
+
            }
         } catch (error) {
             console.error("login error", error);

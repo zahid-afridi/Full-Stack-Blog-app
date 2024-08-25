@@ -11,12 +11,16 @@ import User from './Pages/Admin/User'
 import AllPost from './Pages/AllPost'
 import Login from './Pages/Login'
 import Register from './Pages/Register'
+import {Provider} from 'react-redux'
+import { peristor, store } from './redux/store'
+import { PersistGate } from 'redux-persist/integration/react'
 
 export default function App() {
   return (
   <>
    <BrowserRouter>
-
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={peristor}>
    <Routes>
     <Route path='/' element={<UserLayout/>}>
     <Route index element={<Home/>}/>
@@ -31,6 +35,8 @@ export default function App() {
    <Route path='/login' element={<Login/>}></Route>
    <Route path='/register' element={<Register/>}></Route>
    </Routes>
+   </PersistGate>
+   </Provider>
    </BrowserRouter>
   </>
   )
