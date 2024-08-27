@@ -27,11 +27,11 @@ export default function Sidebar() {
               <FaFileAlt className="me-2" /> All Posts
             </Link>
           </li>
-          <li className="nav-item mb-3">
+          {/* <li className="nav-item mb-3">
             <a className="nav-link text-white" href="#">
               <FaComments className="me-2" /> All Comments
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>
