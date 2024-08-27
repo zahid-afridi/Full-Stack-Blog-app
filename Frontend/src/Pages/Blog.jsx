@@ -1,39 +1,76 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BaseUrl, get } from '../services/Endpoint';
+import { BaseUrl, get, post } from '../services/Endpoint';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 
 export default function Blog() {
   const { postId } = useParams(); // Assuming you're passing the post ID in the route
-  console.log('postid',postId)
-  const [post,setPost]=useState()
+  const user = useSelector((state) => state.auth.user);
 
-  useEffect(()=>{
-    const SinglePost=async()=>{
+  const [singlePost, setSinglePost] = useState(null);
+  const [comment, setComment] = useState('');
+  const [loaddata, setLoaddata] = useState(false);
+
+  useEffect(() => {
+    const fetchSinglePost = async () => {
       try {
-        const request= await get(`/public/Singlepost/${postId}`)
-        const resposne= request.data
-        setPost(resposne.Post)
-        console.log(resposne)
-        
+        const request = await get(`/public/Singlepost/${postId}`);
+        const response = request.data;
+        setSinglePost(response.Post);
+        console.log(response);
       } catch (error) {
-        console.log(error)
+        console.log(error);
+      }
+    };
+    fetchSinglePost();
+  }, [loaddata, postId]); // Added postId as dependency
+
+  const onSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      toast.error('please Login')
+    }else{
+      try {
+        const request = await post("/comment/addcomment", {
+          comment,
+          postId,
+          userId: user._id,
+        });
+        const response = request.data;
+        console.log(response);
+        setLoaddata((prevState) => !prevState); // Toggle loaddata
+        if (response.success) {
+          // alert(response.message);
+          toast.success(response.message)
+          setComment('')
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response && error.response.data && error.response.data.message) {
+          // setError(error.response.data.message); // Set error message from server response
+          toast.error(error.response.data.message)
+      } else {
+          toast.error("An unexpected error occurred. Please try again.");
+      }
       }
     }
-    SinglePost()
-  },)
+    
+  };
+
   return (
     <div className="container text-white mt-5 mb-5">
       <div className="row">
         <div className="col-md-12">
           <h1 className="fw-bold text-white mb-4 display-4">{post && post.title}</h1>
           <img 
-            src={post && `${BaseUrl}/images/${post.image}`} 
+            src={singlePost && `${BaseUrl}/images/${singlePost.image}`} 
             alt="Exploring the Art of Writing" 
             className="img-fluid mb-4" 
             style={{ borderRadius: "10px", maxHeight: "500px", objectFit: "cover", width: "100%" }}
           />
           
-          <p className="mb-5">{post && post.desc}</p>
+          <p className="mb-5">{singlePost && singlePost.desc}</p>
 
           {/* <div className="bg-dark p-4 rounded mb-5">
             <h2 className="text-white mb-4">Big Dedication</h2>
@@ -46,15 +83,16 @@ export default function Blog() {
           <form>
             <div className="mb-3">
               <label htmlFor="comment" className="form-label">Comment</label>
-              <textarea className="form-control" id="comment" rows="4" placeholder="Write your comment here" required></textarea>
+              <textarea className="form-control" id="comment" rows="4" placeholder="Write your comment here" required
+               value={ comment} onChange={(e)=>setComment(e.target.value)}></textarea>
             </div>
-            <button type="submit" className="btn btn-primary">Submit Comment</button>
+            <button type="submit" className="btn btn-primary" onClick={onSubmitComment}>Submit Comment</button>
           </form>
 
           <hr />
 
           <h3 className="mt-5 mb-4">Comments</h3>
-         {post && post.comments && post.comments.map((elem)=>{
+         {singlePost && singlePost.comments && singlePost.comments.map((elem)=>{
           return(
             <div className="bg-secondary p-3 rounded mb-3 d-flex">
             <img 

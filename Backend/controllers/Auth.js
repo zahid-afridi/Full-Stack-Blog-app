@@ -31,7 +31,7 @@ const Register = async (req, res) => {
         // // Remove the image from the local directory after uploading to Cloudinary
         // fs.unlinkSync(imagePath);
 
-        res.status(201).json({ message: 'User registered successfully',user:newUser});
+        res.status(201).json({success:true, message: 'User registered successfully',user:newUser});
     } catch (error) {
         console.error('Error during registration', error);
         res.status(500).json({ error: 'Error during registration' });
@@ -60,8 +60,9 @@ const Login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: false,
-            maxAge: 3600000, // 1 hour
+            maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days in milliseconds
         });
+        
         return res.status(200).json({ success: true, message: "Login successfully", user: FindUser, token });
     } catch (error) {
         console.error('Error during login', error);

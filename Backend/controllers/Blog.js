@@ -1,21 +1,41 @@
 import Blgomodel from "../models/Blog.js";
 
 
-const Create=async(req,res)=>{
+const Create = async (req, res) => {
     try {
-        const {title,desc}=req.body
-        const imagePath = req.file.filename;
-        const CreateBlog=new Blgomodel({
-            title,desc,image:imagePath
-        })
-    await CreateBlog.save()
-    res.status(201).json({ success:true, message: 'Blog Created Successfully',blog:CreateBlog});
-    } catch (error) {
-        console.log(error)
-    res.status(500).json({ success:false, message: 'internal server '});
+        const { title, desc } = req.body;
 
+        // Check if a file was uploaded
+        console.log(req.file); // Debug: Log the file info
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'Image file is required' });
+        }
+
+        const imagePath = req.file.filename;
+
+        // Create the blog post with the provided data
+        const CreateBlog = new Blgomodel({
+            title,
+            desc,
+            image: imagePath
+        });
+
+        // Save the blog post to the database
+        await CreateBlog.save();
+
+        // Respond with success message
+        res.status(201).json({
+            success: true,
+            message: 'Blog Created Successfully',
+            blog: CreateBlog
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
+
+
 const update = async (req, res) => {
     try {
         const { title, desc } = req.body;

@@ -14,11 +14,12 @@ import Register from './Pages/Register'
 import {Provider} from 'react-redux'
 import { peristor, store } from './redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
-
+import {Toaster} from 'react-hot-toast'
 export default function App() {
   return (
   <>
    <BrowserRouter>
+   <Toaster/>
     <Provider store={store}>
       <PersistGate loading={null} persistor={peristor}>
    <Routes>

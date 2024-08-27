@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { BaseUrl, post } from '../services/Endpoint';
 import { removeUser } from '../redux/AuthSlice';
+import toast from 'react-hot-toast';
 
 export default function Navbar() {
   const navigate=useNavigate()
@@ -17,6 +18,7 @@ export default function Navbar() {
            if (request.status==200) {
              navigate('/login')
              dispatch(removeUser())
+             toast.success(response.message)
            }
         } catch (error) {
           console.log(error)
@@ -38,6 +40,7 @@ export default function Navbar() {
             </div>
             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-dark">
               
+              {/* <li><span className='text-bold fs-4 dropdown-item'>{user && user.FullName}</span></li> */}
               {user.role == 'admin' ? <li><Link className="dropdown-item" to="/dashboard">Dashboard</Link></li> :"" }
               <li><a className="dropdown-item" href="#">Profile</a></li>
               <li><a className="dropdown-item " onClick={handleLogout} style={{cursor:"pointer"}}>Sign Out</a></li>

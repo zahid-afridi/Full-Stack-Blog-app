@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { post } from '../services/Endpoint';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/AuthSlice';
+import toast from 'react-hot-toast';
 
 export default function Login() {
     const navigate=useNavigate()
@@ -28,15 +29,16 @@ export default function Login() {
            if (request.status==200) {
             dispatch(setUser(response.user));
             navigate('/')
+            toast.success(response.message)
 
            }
         } catch (error) {
             console.error("login error", error);
             if (error.response && error.response.data && error.response.data.message) {
                 // setError(error.response.data.message); // Set error message from server response
-                console.log(error.response.data.message)
+                toast.error(error.response.data.message)
             } else {
-                setError("An unexpected error occurred. Please try again.");
+                toast.error("An unexpected error occurred. Please try again.");
             }
         }
     };
