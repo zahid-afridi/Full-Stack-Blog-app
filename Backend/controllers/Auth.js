@@ -84,44 +84,50 @@ const Logout=async(req,res)=>{
     }
 }
 
-const updateProfile=async(req,res)=>{
+const updateProfile = async (req, res) => {
     try {
         const userId = req.params.id;
-        const {FullName,oldpassword,newpassword}=req.body
+        const { FullName, oldpassword, newpassword } = req.body;
 
-        const ExistUser= await UserModal.findById(userId)
+        // Find the user by ID
+        const ExistUser = await UserModal.findById(userId);
         if (!ExistUser) {
-            return res.status(404).json({ success: false, message: "Account not found. Please register." });
-        }
-        const comparePassword = await bcrypt.compare(oldpassword, ExistUser.password);
-        
-        if (oldpassword && ! newpassword) {
-            return res.status(404).json({ success: false, message: "Please Enter New Password" });
-        
+            return res.status(404).json({ success: false, message: "Account not found." });
         }
 
-       if (!comparePassword) {
-        return res.status(404).json({ success: false, message: "Please Enter Coorect Password" });
-
-       }
-     
-       
-
-        if (FullName) ExistUser.FullName = FullName;
-       
-        if (req.file) ExistUser.profile = req.file.filename;
-        if (comparePassword) {
-            const hasePassword = await bcrypt.hashSync(newpassword,10)
-            ExistUser.password= hasePassword
+        // Check if old password and new password are provided and validate old password
+        if (oldpassword) {
+            const comparePassword = await bcrypt.compare(oldpassword, ExistUser.password);
+            if (!comparePassword) {
+                return res.status(401).json({ success: false, message: "Old password is incorrect." });
+            }
         }
-        await ExistUser.save()
-        return res.status(200).json({ success: true, message: "Profile Update Successfully", user:ExistUser });
-          
+
+        // Update FullName if provided
+        if (FullName) {
+            ExistUser.FullName = FullName;
+        }
+
+        // Update password if old and new passwords are provided and valid
+        if (oldpassword && newpassword) {
+            const hashedPassword = await bcrypt.hash(newpassword, 10);
+            ExistUser.password = hashedPassword;
+        } else if (oldpassword && !newpassword) {
+            return res.status(400).json({ success: false, message: "New password is required when old password is provided." });
+        }
+
         
+
+    
+        await ExistUser.save();
+
+        // Return success response
+        res.status(200).json({ success: true, message: "Profile updated successfully.", user: ExistUser });
+
     } catch (error) {
-        console.error("Error logging out:", error);
-        res.status(500).json({ message: "Internal Server Error" });
+        console.error("Error updating profile:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-}
+};
 
 export {Register,Login,Logout,updateProfile}

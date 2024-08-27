@@ -43,7 +43,7 @@ export default function LatestPost() {
                                 <div className="card-body bg-dark text-white">
                                     <h5 className="card-title">{elem.title}</h5>
                                     <p className="card-text">{elem.desc}</p>
-                                    <a href="" className="btn btn-primary w-100 mt-3" onClick={()=>handleBlog(elem._id)}>Read Article</a>
+                                    <button  className="btn btn-primary w-100 mt-3" onClick={()=>handleBlog(elem._id)}>Read Article</button>
                                 </div>
                             </div>
                         </div>
