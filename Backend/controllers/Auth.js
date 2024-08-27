@@ -84,4 +84,44 @@ const Logout=async(req,res)=>{
     }
 }
 
-export {Register,Login,Logout}
+const updateProfile=async(req,res)=>{
+    try {
+        const userId = req.params.id;
+        const {FullName,oldpassword,newpassword}=req.body
+
+        const ExistUser= await UserModal.findById(userId)
+        if (!ExistUser) {
+            return res.status(404).json({ success: false, message: "Account not found. Please register." });
+        }
+        const comparePassword = await bcrypt.compare(oldpassword, ExistUser.password);
+        
+        if (oldpassword && ! newpassword) {
+            return res.status(404).json({ success: false, message: "Please Enter New Password" });
+        
+        }
+
+       if (!comparePassword) {
+        return res.status(404).json({ success: false, message: "Please Enter Coorect Password" });
+
+       }
+     
+       
+
+        if (FullName) ExistUser.FullName = FullName;
+       
+        if (req.file) ExistUser.profile = req.file.filename;
+        if (comparePassword) {
+            const hasePassword = await bcrypt.hashSync(newpassword,10)
+            ExistUser.password= hasePassword
+        }
+        await ExistUser.save()
+        return res.status(200).json({ success: true, message: "Profile Update Successfully", user:ExistUser });
+          
+        
+    } catch (error) {
+        console.error("Error logging out:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export {Register,Login,Logout,updateProfile}

@@ -15,6 +15,7 @@ import {Provider} from 'react-redux'
 import { peristor, store } from './redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import {Toaster} from 'react-hot-toast'
+import Profile from './Pages/Profile'
 export default function App() {
   return (
   <>
@@ -26,6 +27,7 @@ export default function App() {
     <Route path='/' element={<UserLayout/>}>
     <Route index element={<Home/>}/>
     <Route path='blog/:postId' element={<Blog/>}></Route>
+    <Route path='/profile/:userId' element={<Profile/>}></Route>
     </Route>
         <Route path='/dashboard' element={<Adminlayout/>}>
         <Route index element={<Admin/>}/>

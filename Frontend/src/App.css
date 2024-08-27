@@ -68,3 +68,126 @@ body{
   font-size: 1.5rem;
   margin-top: 20px;
 }
+
+
+
+/* Prfoile page css  */
+body {
+  background-color: #0E1428;
+  font-family: 'Arial', sans-serif;
+}
+
+.profile-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background-color: #1A202C;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
+}
+
+.profile-title {
+  color: #E2E8F0;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-image-section {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.profile-image-label {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4A5568;
+}
+
+.profile-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #2D3748;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #4A5568;
+}
+
+.profile-icon {
+  color: #A0AEC0;
+  font-size: 40px;
+}
+
+.profile-camera-icon {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: #4A5568;
+  color: #E2E8F0;
+  padding: 5px;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.profile-image-input {
+  display: none;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #A0AEC0;
+}
+
+.profile-input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  background-color: #2D3748;
+  color: #E2E8F0;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+.profile-input::placeholder {
+  color: #A0AEC0;
+}
+
+.profile-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #3182CE;
+  color: #E2E8F0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-button:hover {
+  background-color: #2B6CB0;
+}

@@ -1,6 +1,7 @@
 import Blgomodel from "../models/Blog.js";
 
-
+import fs from 'fs';
+import path from 'path';
 const Create = async (req, res) => {
     try {
         const { title, desc } = req.body;
@@ -80,6 +81,12 @@ const DeleteBlog=async(req,res)=>{
        
         if (!posts) {
             return res.status(404).json({ success: false, message: 'Blog not found' });
+        }
+        if (posts.image) {
+            const profilePath = path.join('public/images', posts.image);
+            fs.promises.unlink(profilePath)
+                .then(() => console.log('Profile image deleted'))
+                .catch(err => console.error('Error deleting profile image:', err));
         }
         const deletepost=await Blgomodel.findByIdAndDelete(postid)
         res.status(200).json({ success: true, message:"Post Delete Successfully",  post:deletepost });
