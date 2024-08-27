@@ -38,7 +38,11 @@ const Delete=async(req,res)=>{
 
         const ExistUser=await UserModal.findById(userId)
         if (!ExistUser) {
-            res.status(404).json({success:false,message:"No User Found"})
+           return res.status(404).json({success:false,message:"No User Found"})
+            
+        }
+        if (ExistUser.role == 'admin') {
+           return res.status(404).json({success:false,message:"Soory Your Admin You Can't Delete You Account"})
             
         }
        const DeleteUser= await UserModal.findByIdAndDelete(userId)
